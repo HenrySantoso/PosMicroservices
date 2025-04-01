@@ -4,7 +4,7 @@ namespace Play.Catalog.Service.Dtos
 {
     public static class ProductDto
     {
-        public record ProductDto(
+        public record GetProductDto(
             Guid ProductId,
             string ProductName,
             string Description,

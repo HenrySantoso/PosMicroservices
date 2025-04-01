@@ -4,7 +4,7 @@ namespace Play.Catalog.Service.Dtos
 {
     public static class CategoryDto
     {
-        public record CategoryDto(Guid CategoryId, string CategoryName);
+        public record GetCategoryDto(Guid CategoryId, string CategoryName);
 
         public record CreateCategoryDto([Required] string CategoryName);
 
