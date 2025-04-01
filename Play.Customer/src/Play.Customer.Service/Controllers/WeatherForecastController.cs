@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Play.Catalog.Service.Controllers;
+namespace Play.Customer.Service.Controllers;
 
 [ApiController]
 [Route("[controller]")]
