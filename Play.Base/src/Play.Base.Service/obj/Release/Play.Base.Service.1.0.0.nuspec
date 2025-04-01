@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Play.Base.Service</id>
+    <version>1.0.0</version>
+    <authors>Play.Base.Service</authors>
+    <description>Package Description</description>
+    <repository type="git" commit="e27adcf75c79782c28b0561d8f72b95813dfa3a9" />
+    <dependencies>
+      <group targetFramework="net9.0">
+        <dependency id="Microsoft.Extensions.Configuration" version="9.0.3" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.Configuration.Binder" version="9.0.3" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.Extensions.DependencyInjection" version="9.0.3" exclude="Build,Analyzers" />
+        <dependency id="MongoDB.Driver" version="3.2.1" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="C:\GitHub\Microservices\PosMicroservices\Play.Base\src\Play.Base.Service\bin\Release\net9.0\Play.Base.Service.dll" target="lib\net9.0\Play.Base.Service.dll" />
+  </files>
+</package>

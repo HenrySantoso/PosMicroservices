@@ -254,7 +254,7 @@
           }
         }
       },
-      "Play.Common.Service/1.0.0": {
+      "Play.Base.Service/1.0.0": {
         "type": "package",
         "dependencies": {
           "Microsoft.Extensions.Configuration": "9.0.3",
@@ -263,10 +263,10 @@
           "MongoDB.Driver": "3.2.1"
         },
         "compile": {
-          "lib/net9.0/Play.Common.Service.dll": {}
+          "lib/net9.0/Play.Base.Service.dll": {}
         },
         "runtime": {
-          "lib/net9.0/Play.Common.Service.dll": {}
+          "lib/net9.0/Play.Base.Service.dll": {}
         }
       },
       "SharpCompress/0.30.1": {
@@ -1028,15 +1028,15 @@
         "packageIcon.png"
       ]
     },
-    "Play.Common.Service/1.0.0": {
-      "sha512": "jFp+KBCUmtqRivzpe85jV7kQiFx6q8rLbRXD2jgIAIaNhsFumYv3x5iHJWjoR9IkJBPZc2q2h68Yktj1YeH6ag==",
+    "Play.Base.Service/1.0.0": {
+      "sha512": "hjIYq8qPVolNcnY5TmY1PjJxwdPHJlkwmfV2uBJkZUbMkr4dX/UAxeYE7MKRosxc4p1KXfxtXYLgguTW8fntLA==",
       "type": "package",
-      "path": "play.common.service/1.0.0",
+      "path": "play.base.service/1.0.0",
       "files": [
         ".nupkg.metadata",
-        "lib/net9.0/Play.Common.Service.dll",
-        "play.common.service.1.0.0.nupkg.sha512",
-        "play.common.service.nuspec"
+        "lib/net9.0/Play.Base.Service.dll",
+        "play.base.service.1.0.0.nupkg.sha512",
+        "play.base.service.nuspec"
       ]
     },
     "SharpCompress/0.30.1": {
@@ -1372,7 +1372,7 @@
     "net9.0": [
       "Microsoft.AspNetCore.OpenApi >= 9.0.0",
       "MongoDB.Driver >= 3.2.1",
-      "Play.Common.Service >= 1.0.0",
+      "Play.Base.Service >= 1.0.0",
       "Swashbuckle.AspNetCore >= 7.2.0"
     ]
   },
@@ -1402,6 +1402,7 @@
       ],
       "sources": {
         "C:\\GitHub\\Microservices\\ExampleMicroservices\\packages": {},
+        "C:\\GitHub\\Microservices\\PosMicroservices\\packages": {},
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
@@ -1436,7 +1437,7 @@
             "target": "Package",
             "version": "[3.2.1, )"
           },
-          "Play.Common.Service": {
+          "Play.Base.Service": {
             "target": "Package",
             "version": "[1.0.0, )"
           },

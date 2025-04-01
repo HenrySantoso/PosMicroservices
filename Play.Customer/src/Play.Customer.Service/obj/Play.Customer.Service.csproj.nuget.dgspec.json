@@ -26,6 +26,7 @@
         ],
         "sources": {
           "C:\\GitHub\\Microservices\\ExampleMicroservices\\packages": {},
+          "C:\\GitHub\\Microservices\\PosMicroservices\\packages": {},
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
@@ -60,7 +61,7 @@
               "target": "Package",
               "version": "[3.2.1, )"
             },
-            "Play.Common.Service": {
+            "Play.Base.Service": {
               "target": "Package",
               "version": "[1.0.0, )"
             },

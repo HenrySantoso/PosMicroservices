@@ -3,7 +3,8 @@ using Play.Base.Service.Interfaces;
 
 namespace Play.Base.Service.MongoDB
 {
-    public class MongoRepository<T> : IRepository<T> where T : IEntity
+    public class MongoRepository<T> : IRepository<T>
+        where T : IEntity
     {
         //private const string collectionName = "items";
         private readonly IMongoCollection<T> dbCollection;
