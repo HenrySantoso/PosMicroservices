@@ -1,0 +1,32 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Play.Base", "Play.Base", "{F6EB0B12-A6CA-ECC2-BF69-AC5C296E3432}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0DB5D937-F159-7F93-6B2C-1294D7FDF2B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Base.Service", "Play.Base\src\Play.Base.Service\Play.Base.Service.csproj", "{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{0DB5D937-F159-7F93-6B2C-1294D7FDF2B4} = {F6EB0B12-A6CA-ECC2-BF69-AC5C296E3432}
+		{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27} = {0DB5D937-F159-7F93-6B2C-1294D7FDF2B4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB45B9F0-D23E-4E68-BF3E-FFDAFC39ED71}
+	EndGlobalSection
+EndGlobal
