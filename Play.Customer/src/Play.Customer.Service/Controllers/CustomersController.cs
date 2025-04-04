@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Play.Base.Service.Interfaces;
 using Play.Customer.Service.Dtos;
 using Play.Customer.Service.Entities;
-using Play.Customer.Service.Services;
 
 namespace Play.Customer.Service.Controllers
 {
