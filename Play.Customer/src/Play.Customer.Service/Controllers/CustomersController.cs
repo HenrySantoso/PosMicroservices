@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Play.Base.Service.Interfaces;
-using Play.Customer.Service;
 using Play.Customer.Service.Dtos;
 using Play.Customer.Service.Entities;
+using Play.Customer.Service.Services;
 
 namespace Play.Customer.Service.Controllers
 {
@@ -41,7 +41,6 @@ namespace Play.Customer.Service.Controllers
             var item = new CustomerItem
             {
                 Id = Guid.NewGuid(),
-                CustomerId = new Random().Next(1000, 9999),
                 CustomerName = createItemDto.CustomerName,
                 ContactNumber = createItemDto.ContactNumber,
                 Email = createItemDto.Email,

@@ -9,7 +9,6 @@ namespace Play.Customer.Service.Entities
         [BsonId]
         [BsonGuidRepresentation(GuidRepresentation.Standard)]
         public Guid Id { get; init; } // ID unik global dari Service Base
-        public int CustomerId { get; init; } // ID unik dalam Customer Service
         public string CustomerName { get; set; } = string.Empty;
         public string ContactNumber { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;

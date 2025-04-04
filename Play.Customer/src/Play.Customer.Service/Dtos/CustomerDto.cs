@@ -2,7 +2,6 @@ namespace Play.Customer.Service.Dtos;
 
 public record CustomerDto(
     Guid Id,
-    int CustomerId,
     string CustomerName,
     string ContactNumber,
     string Email,

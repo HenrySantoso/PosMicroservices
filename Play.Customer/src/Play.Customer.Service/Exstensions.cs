@@ -9,7 +9,6 @@ namespace Play.Customer.Service
         {
             return new CustomerDto(
                 customer.Id,
-                customer.CustomerId,
                 customer.CustomerName,
                 customer.ContactNumber,
                 customer.Email,
