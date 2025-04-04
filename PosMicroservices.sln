@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Play.Customer", "Play.Custo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Play.Sales", "Play.Sales", "{2069BF1E-566A-A2B9-1D6F-BB72ED03C22C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Play.Transaction", "Play.Transaction", "{BBE53A99-1B7B-6FC4-3439-A99D3781BD81}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0DB5D937-F159-7F93-6B2C-1294D7FDF2B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Base.Service", "Play.Base\src\Play.Base.Service\Play.Base.Service.csproj", "{5B68FEDE-8E9C-5F9C-767C-81E1E1906D27}"
@@ -25,6 +27,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{1E95C862-9C63-5B88-7607-1190EC74AEEF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Sales.Service", "Play.Sales\src\Play.Sales.Service\Play.Sales.Service.csproj", "{F0A6637A-5B60-19F2-C170-0D03DC83AA5C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8749F602-1E15-4777-A302-EC7186BBA130}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Play.Transaction.Service", "Play.Transaction\src\Play.Transaction.Service\Play.Transaction.Service.csproj", "{F490489F-6AE5-F560-6E32-9D03618171E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -48,6 +54,10 @@ Global
 		{F0A6637A-5B60-19F2-C170-0D03DC83AA5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0A6637A-5B60-19F2-C170-0D03DC83AA5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0A6637A-5B60-19F2-C170-0D03DC83AA5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F490489F-6AE5-F560-6E32-9D03618171E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F490489F-6AE5-F560-6E32-9D03618171E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F490489F-6AE5-F560-6E32-9D03618171E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F490489F-6AE5-F560-6E32-9D03618171E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,8 +71,10 @@ Global
 		{B33F4521-548B-7779-D45B-C366FB9DA0F2} = {BE4320AD-199A-D746-2896-8F36FBB5446E}
 		{1E95C862-9C63-5B88-7607-1190EC74AEEF} = {2069BF1E-566A-A2B9-1D6F-BB72ED03C22C}
 		{F0A6637A-5B60-19F2-C170-0D03DC83AA5C} = {1E95C862-9C63-5B88-7607-1190EC74AEEF}
+		{8749F602-1E15-4777-A302-EC7186BBA130} = {BBE53A99-1B7B-6FC4-3439-A99D3781BD81}
+		{F490489F-6AE5-F560-6E32-9D03618171E1} = {8749F602-1E15-4777-A302-EC7186BBA130}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {590E94CF-54A6-47F2-BE45-86C3AA049F9E}
+		SolutionGuid = {C3D7A814-03C7-4E78-90E3-D595C5225CE6}
 	EndGlobalSection
 EndGlobal

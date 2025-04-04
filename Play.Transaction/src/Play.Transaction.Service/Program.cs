@@ -2,7 +2,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Play.Base.Service.MongoDB;
-using Play.Catalog.Service.Entities;
+using Play.Transaction.Service.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,12 +13,13 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard
 builder.Services.AddControllers(
     options => options.SuppressAsyncSuffixInActionNames=false
 );
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddMongo().AddMongoRepository<Category>("Categories");
-builder.Services.AddMongo().AddMongoRepository<Product>("Products");
+builder.Services.AddMongo().AddMongoRepository<SaleItems>("SaleItems");
+builder.Services.AddMongo().AddMongoRepository<Sales>("Sales");
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
