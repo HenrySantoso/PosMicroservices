@@ -1,3 +1,4 @@
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Play.Base.Service.Interfaces;
 using Play.Transaction.Service.Clients;
@@ -31,8 +32,32 @@ namespace Play.Transaction.Service.Controllers
             this.productClient = productClient;
         }
 
+        // [HttpGet]
+        // public async Task<IEnumerable<SalesDto>> GetAllAsync()
+        // {
+        //     // Get all sales items
+        //     var saleItems = await saleItemRepository.GetAllAsync();
+        //     // Get sales item by sale id
+        //     var saleItemsBySaleId = saleItems.GroupBy(item => item.SaleId).ToList();
+        //     // looping through each sale item and get the total amount
+        //     foreach (var saleItem in saleItemsBySaleId)
+        //     {
+        //         var totalAmount = saleItem.Sum(item => item.Price * item.Quantity);
+        //         var sale = await salesRepository.GetByIdAsync(saleItem.Key);
+        //         if (sale != null)
+        //         {
+        //             sale.TotalAmount = totalAmount;
+        //             await salesRepository.UpdateAsync(sale);
+        //         }
+        //     }
+
+        //     var sales = await salesRepository.GetAllAsync();
+        //     return sales.Select(sale => sale.AsDto());
+        // }
+
+
         [HttpGet]
-        public async Task<IEnumerable<SalesDto>> GetAllAsync()
+        public async Task<IEnumerable<SaleByIdDto>> GetAllAsync()
         {
             // Get all sales items
             var saleItems = await saleItemRepository.GetAllAsync();
@@ -50,8 +75,17 @@ namespace Play.Transaction.Service.Controllers
                 }
             }
 
+            var customerIds = saleItems.Select(item => item.SaleId).Distinct().ToList();
+            var customers = await customerClient.GetCustomersByIdsAsync(customerIds);
+
             var sales = await salesRepository.GetAllAsync();
-            return sales.Select(sale => sale.AsDto());
+            return sales.Select(sale => new SaleByIdDto(
+                sale.Id,
+                sale.CustomerId,
+                customers.FirstOrDefault(c => c.Id == sale.CustomerId)?.CustomerName ?? "Unknown",
+                sale.SaleDate,
+                sale.TotalAmount
+            ));
         }
 
         [HttpGet("{id}")]
@@ -72,44 +106,6 @@ namespace Play.Transaction.Service.Controllers
             var saleByIdDto = sale.AsSaleByIdDto(customer.CustomerName);
             return saleByIdDto;
         }
-
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<SaleDetailDto>> GetByIdAsync(Guid id)
-        // {
-        //     var sale = await salesRepository.GetByIdAsync(id);
-        //     if (sale is null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var customer = await customerClient.GetCustomerByIdAsync(sale.CustomerId);
-        //     if (customer is null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var saleItems = await saleItemRepository.GetByIdAsync(sale.Id);
-        //     if (saleItems is null)
-        //     {
-        //         return NotFound("Sale items not found.");
-        //     }
-
-        //     var product = await productClient.GetProductByIdAsync(saleItems.ProductId);
-        //     if (product is null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     var saleItemDtos = saleItems.Select(item => item.AsDto()).ToList();
-
-        //     var saleDetailDto = sale.AsSaleDetailDto(
-        //         customer.CustomerName,
-        //         product.ProductName,
-        //         saleItemDtos
-        //     );
-
-        //     return saleDetailDto;
-        // }
 
         [HttpPost]
         public async Task<ActionResult<SalesDto>> Post(CreateSalesDto createDto)

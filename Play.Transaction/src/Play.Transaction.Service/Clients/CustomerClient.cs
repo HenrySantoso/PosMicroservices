@@ -31,5 +31,20 @@ namespace Play.Transaction.Service.Clients
 
             return null;
         }
+
+        public async Task<IEnumerable<CustomerDto>> GetCustomersByIdsAsync(
+            IEnumerable<Guid> customerIds
+        )
+        {
+            var query = string.Join(",", customerIds);
+            var response = await httpClient.GetAsync($"/api/Customers?ids={query}");
+            Console.WriteLine($"GET /api/Customers?ids={query} => {response.StatusCode}");
+
+            if (response.IsSuccessStatusCode)
+                return await response.Content.ReadFromJsonAsync<IEnumerable<CustomerDto>>()
+                    ?? Enumerable.Empty<CustomerDto>();
+
+            return Enumerable.Empty<CustomerDto>();
+        }
     }
 }

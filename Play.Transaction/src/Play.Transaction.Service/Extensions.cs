@@ -28,19 +28,6 @@ namespace Play.Transaction.Service
             );
         }
 
-        public static SaleItemDetailDto AsItemDetailDto(
-            this SaleItems saleItems,
-            string productName
-        )
-        {
-            return new SaleItemDetailDto(
-                saleItems.ProductId,
-                productName,
-                saleItems.Quantity,
-                saleItems.Price
-            );
-        }
-
         public static UpdateProductStockDto AsUpdateProductStockDto(
             this SaleItems saleItems,
             int stockQuantity
@@ -66,22 +53,26 @@ namespace Play.Transaction.Service
             );
         }
 
+        public static SaleItemDetailDto AsItemDetailDto(
+            this SaleItems saleItems,
+            string productName
+        )
+        {
+            return new SaleItemDetailDto(
+                saleItems.ProductId,
+                productName,
+                saleItems.Quantity,
+                saleItems.Price
+            );
+        }
+
         public static SaleDetailDto AsSaleDetailDto(
             this Sales sales,
             string customerName,
             string productName,
-            IEnumerable<SaleItemsDto> saleItems
+            List<SaleItemDetailDto> saleItemDetails
         )
         {
-            var saleItemDetails = saleItems
-                .Select(item => new SaleItemDetailDto(
-                    item.ProductId, // Sesuaikan dengan properti SaleItemsDto
-                    productName, // Sesuaikan dengan properti SaleItemsDto
-                    item.Quantity, // Sesuaikan dengan properti SaleItemsDto
-                    item.Price // Sesuaikan dengan properti SaleItemsDto
-                ))
-                .ToList();
-
             return new SaleDetailDto(
                 sales.Id,
                 sales.CustomerId,
@@ -90,6 +81,21 @@ namespace Play.Transaction.Service
                 sales.TotalAmount,
                 saleItemDetails // Menggunakan list SaleItemDetailDto
             );
+        }
+
+        public static List<SaleItemDetailDto> AsDetailDtoList(
+            this List<SaleItems> saleItems,
+            List<ProductDto> products
+        )
+        {
+            return saleItems
+                .Select(item =>
+                    item.AsItemDetailDto(
+                        products.FirstOrDefault(p => p.Id == item.ProductId)?.ProductName
+                            ?? "Unknown"
+                    )
+                )
+                .ToList();
         }
     }
 }
