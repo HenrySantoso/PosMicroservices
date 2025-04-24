@@ -1,6 +1,6 @@
 using Play.Transaction.Service.Dtos;
 
-namespace Pos.Transaction.Service.Clients
+namespace Play.Transaction.Service.Clients
 {
     public class CustomerClient
     {
@@ -16,7 +16,20 @@ namespace Pos.Transaction.Service.Clients
             var customers = await httpClient.GetFromJsonAsync<IReadOnlyCollection<CustomerDto>>(
                 "/api/Customer"
             );
-            return customers;
+            return customers ?? new List<CustomerDto>();
+        }
+
+        public async Task<CustomerDto?> GetCustomerByIdAsync(Guid customerId)
+        {
+            var response = await httpClient.GetAsync($"/api/Customers/{customerId}");
+            Console.WriteLine($"GET /api/Customers/{customerId} => {response.StatusCode}");
+
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<CustomerDto>();
+            }
+
+            return null;
         }
     }
 }

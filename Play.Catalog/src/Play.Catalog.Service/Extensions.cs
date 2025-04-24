@@ -17,8 +17,17 @@ namespace Play.Catalog.Service
                 product.ProductName,
                 product.Description,
                 product.Price,
+                product.StockQuantity,
                 product.CategoryId
             );
+        }
+
+        public static UpdateProductStockDto AsUpdateProductStockDto(
+            this Product product,
+            int stockQuantity
+        )
+        {
+            return new UpdateProductStockDto(product.Id, stockQuantity);
         }
     }
 }

@@ -7,6 +7,7 @@ namespace Play.Catalog.Service.Dtos
         string ProductName,
         string Description,
         decimal Price,
+        int StockQuantity,
         Guid CategoryId
     );
 
@@ -14,6 +15,7 @@ namespace Play.Catalog.Service.Dtos
         [Required] string ProductName,
         [Required] string Description,
         [Required] decimal Price,
+        [Required] int StockQuantity,
         [Required] Guid CategoryId
     );
 
@@ -21,6 +23,12 @@ namespace Play.Catalog.Service.Dtos
         [Required] string ProductName,
         [Required] string Description,
         [Required] decimal Price,
+        [Required] int StockQuantity,
         [Required] Guid CategoryId
+    );
+
+    public record UpdateProductStockDto(
+        [Required] Guid ProductId,
+        [Required] int StockQuantity // nilai bisa positif (restock) atau negatif (penjualan)
     );
 }

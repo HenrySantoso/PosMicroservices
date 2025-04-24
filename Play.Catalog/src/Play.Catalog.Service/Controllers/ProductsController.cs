@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Play.Base.Service.Interfaces;
 using Play.Catalog.Service.Dtos;
@@ -41,12 +37,18 @@ namespace Play.Catalog.Service.Controllers
         [HttpPost]
         public async Task<ActionResult<ProductDto>> Post(CreateProductDto createItemDto)
         {
+            if (createItemDto.CategoryId == Guid.Empty)
+            {
+                return BadRequest("CategoryId is required.");
+            }
+
             var item = new Product
             {
                 Id = Guid.NewGuid(),
                 ProductName = createItemDto.ProductName,
                 Description = createItemDto.Description,
                 Price = createItemDto.Price,
+                StockQuantity = createItemDto.StockQuantity,
                 CategoryId = createItemDto.CategoryId
             };
             await productRepository.CreateAsync(item);
@@ -57,6 +59,11 @@ namespace Play.Catalog.Service.Controllers
         [HttpPut("{id}")]
         public async Task<ActionResult> PutAsync(Guid id, UpdateProductDto updateItemDto)
         {
+            if (updateItemDto.CategoryId == Guid.Empty)
+            {
+                return BadRequest("CategoryId is required.");
+            }
+
             var existingItem = await productRepository.GetByIdAsync(id);
             if (existingItem is null)
             {
@@ -66,8 +73,28 @@ namespace Play.Catalog.Service.Controllers
             existingItem.ProductName = updateItemDto.ProductName;
             existingItem.Description = updateItemDto.Description;
             existingItem.Price = updateItemDto.Price;
+            existingItem.StockQuantity = updateItemDto.StockQuantity;
             existingItem.CategoryId = updateItemDto.CategoryId;
             await productRepository.UpdateAsync(existingItem);
+            return NoContent();
+        }
+
+        [HttpPut("{id}/stock")]
+        public async Task<IActionResult> UpdateStock(Guid id, UpdateProductStockDto dto)
+        {
+            if (dto.StockQuantity == 0)
+            {
+                return BadRequest("Stock quantity must be greater than 0.");
+            }
+
+            var product = await productRepository.GetByIdAsync(id);
+            if (product is null)
+            {
+                return NotFound();
+            }
+
+            product.StockQuantity += dto.StockQuantity;
+            await productRepository.UpdateAsync(product);
             return NoContent();
         }
 

@@ -3,6 +3,7 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Play.Base.Service.MongoDB;
 using Play.Transaction.Service.Entities;
+using Play.Transaction.Service.Clients;    
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,15 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMongo().AddMongoRepository<SaleItems>("SaleItems");
 builder.Services.AddMongo().AddMongoRepository<Sales>("Sales");
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddHttpClient<ProductClient>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7201");
+});
+builder.Services.AddHttpClient<CustomerClient>(client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7202");
+});
 
 var app = builder.Build();
 

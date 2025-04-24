@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Play.Transaction.Service.Dtos
 {
     public record CustomerDto(
@@ -17,5 +19,71 @@ namespace Play.Transaction.Service.Dtos
         string Description
     );
 
-    public record CategoryDto(Guid Id, string CategoryName);
+    public record UpdateProductStockDto(
+        Guid ProductId,
+        int StockQuantity // nilai bisa positif (restock) atau negatif (penjualan)
+    );
+
+    public record SaleItemsProductDto(
+        Guid Id,
+        Guid ProductId,
+        Guid SaleId,
+        string ProductName,
+        decimal Price,
+        int Quantity
+    );
+
+    public record SaleItemsDto(Guid Id, Guid ProductId, Guid SaleId, int Quantity, decimal Price);
+
+    public record CreateSaleItemsDto(
+        [Required] Guid ProductId,
+        [Required] Guid SaleId,
+        [Required] int Quantity,
+        [Required] decimal Price
+    );
+
+    public record UpdateSaleItemsDto(
+        [Required] Guid ProductId,
+        [Required] Guid SaleId,
+        int Quantity,
+        decimal Price
+    );
+
+    public record SalesDto(Guid Id, Guid CustomerId, DateTime SaleDate, decimal TotalAmount);
+
+    public record CreateSalesDto(
+        [Required] Guid CustomerId,
+        DateTime SaleDate,
+        decimal TotalAmount
+    );
+
+    public record UpdateSalesDto(
+        [Required] Guid CustomerId,
+        DateTime SaleDate,
+        decimal TotalAmount
+    );
+
+    public record SaleByIdDto(
+        Guid Id,
+        Guid CustomerId,
+        string CustomerName,
+        DateTime SaleDate,
+        decimal TotalAmount
+    );
+
+    public record SaleDetailDto(
+        Guid SaleId,
+        Guid CustomerId,
+        string CustomerName,
+        DateTime SaleDate,
+        decimal TotalAmount,
+        List<SaleItemDetailDto> SaleItems
+    );
+
+    public record SaleItemDetailDto(
+        Guid ProductId,
+        string ProductName,
+        int Quantity,
+        decimal Price
+    );
 }
