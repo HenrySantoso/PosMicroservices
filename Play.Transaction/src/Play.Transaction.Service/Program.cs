@@ -2,8 +2,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Play.Base.Service.MongoDB;
+using Play.Transaction.Service.Clients;
 using Play.Transaction.Service.Entities;
-using Play.Transaction.Service.Clients;    
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,9 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
 // Add services to the container.
-builder.Services.AddControllers(
-    options => options.SuppressAsyncSuffixInActionNames=false
-);
+builder.Services.AddControllers(options => options.SuppressAsyncSuffixInActionNames = false);
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

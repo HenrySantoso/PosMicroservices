@@ -73,7 +73,6 @@ namespace Play.Transaction.Service.Controllers
             return saleByIdDto;
         }
 
-
         // [HttpGet("{id}")]
         // public async Task<ActionResult<SaleDetailDto>> GetByIdAsync(Guid id)
         // {

@@ -12,7 +12,6 @@ namespace Play.Transaction.Service.Controllers
     {
         private readonly IRepository<SaleItems> saleItemsRepository;
         private readonly IRepository<Sales> salesRepository;
-
         private readonly ProductClient productClient;
 
         public SaleItemsController(
@@ -77,28 +76,6 @@ namespace Play.Transaction.Service.Controllers
             return item.AsProductDto(product.ProductName);
         }
 
-        // [HttpPost]
-        // public async Task<ActionResult<SaleItemsDto>> Post(CreateSaleItemsDto createItemDto)
-        // {
-        //     var item = new SaleItems
-        //     {
-        //         Id = Guid.NewGuid(),
-        //         ProductId = createItemDto.ProductId,
-        //         SaleId = createItemDto.SaleId,
-        //         Quantity = createItemDto.Quantity,
-        //         Price = createItemDto.Price
-        //     };
-
-        //     await saleItemsRepository.CreateAsync(item);
-
-        //     // update stock quantity from product service
-
-        //     // 🔄 Update TotalAmount di tabel Sales
-        //     await UpdateTotalAmountAsync(item.SaleId);
-
-        //     return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
-        // }
-
         [HttpPost]
         public async Task<ActionResult<SaleItemsDto>> Post(CreateSaleItemsDto createItemDto)
         {
@@ -113,25 +90,47 @@ namespace Play.Transaction.Service.Controllers
 
             await saleItemsRepository.CreateAsync(item);
 
-            // Update stock quantity from product service
-            var product = await productClient.GetProductByIdAsync(item.ProductId);
-            if (product is null)
-            {
-                return NotFound("Product not found.");
-            }
-            var stockQuantity = product.StockQuantity - item.Quantity;
-            if (stockQuantity < 0)
-            {
-                return BadRequest("Insufficient stock quantity.");
-            }
-            var updateProductStockDto = item.AsUpdateProductStockDto(stockQuantity);
-            await productClient.UpdateProductStockAsync(item.ProductId, updateProductStockDto);
+            // update stock quantity from product service
 
             // 🔄 Update TotalAmount di tabel Sales
             await UpdateTotalAmountAsync(item.SaleId);
 
             return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
         }
+
+        // [HttpPost]
+        // public async Task<ActionResult<SaleItemsDto>> Post(CreateSaleItemsDto createItemDto)
+        // {
+        //     var item = new SaleItems
+        //     {
+        //         Id = Guid.NewGuid(),
+        //         ProductId = createItemDto.ProductId,
+        //         SaleId = createItemDto.SaleId,
+        //         Quantity = createItemDto.Quantity,
+        //         Price = createItemDto.Price
+        //     };
+
+        //     await saleItemsRepository.CreateAsync(item);
+
+        //     // Update stock quantity from product service
+        //     var product = await productClient.GetProductByIdAsync(item.ProductId);
+        //     if (product is null)
+        //     {
+        //         return NotFound("Product not found.");
+        //     }
+        //     var stockQuantity = product.StockQuantity - item.Quantity;
+        //     if (stockQuantity < 0)
+        //     {
+        //         return BadRequest("Insufficient stock quantity.");
+        //     }
+        //     var updateProductStockDto = item.AsUpdateProductStockDto(stockQuantity);
+        //     await productClient.UpdateProductStockAsync(item.ProductId, updateProductStockDto);
+
+        //     // 🔄 Update TotalAmount di tabel Sales
+        //     await UpdateTotalAmountAsync(item.SaleId);
+
+        //     return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
+        // }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> PutAsync(Guid id, UpdateSaleItemsDto updateItemDto)
