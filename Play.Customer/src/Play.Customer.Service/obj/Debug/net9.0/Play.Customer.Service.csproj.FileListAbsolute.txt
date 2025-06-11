@@ -48,3 +48,5 @@ C:\GitHub\Microservices\PosMicroservices\Play.Customer\src\Play.Customer.Service
 C:\GitHub\Microservices\PosMicroservices\Play.Customer\src\Play.Customer.Service\obj\Debug\net9.0\Play.Customer.Service.pdb
 C:\GitHub\Microservices\PosMicroservices\Play.Customer\src\Play.Customer.Service\obj\Debug\net9.0\Play.Customer.Service.genruntimeconfig.cache
 C:\GitHub\Microservices\PosMicroservices\Play.Customer\src\Play.Customer.Service\obj\Debug\net9.0\ref\Play.Customer.Service.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Customer\src\Play.Customer.Service\bin\Debug\net9.0\Polly.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Customer\src\Play.Customer.Service\bin\Debug\net9.0\Polly.Core.dll

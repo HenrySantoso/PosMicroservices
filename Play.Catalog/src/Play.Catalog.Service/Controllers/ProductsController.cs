@@ -79,25 +79,6 @@ namespace Play.Catalog.Service.Controllers
             return NoContent();
         }
 
-        // [HttpPut("{id}/stock")]
-        // public async Task<IActionResult> UpdateStock(Guid id, UpdateProductStockDto dto)
-        // {
-        //     if (dto.StockQuantity == 0)
-        //     {
-        //         return BadRequest("Stock quantity must be greater than 0.");
-        //     }
-
-        //     var product = await productRepository.GetByIdAsync(id);
-        //     if (product is null)
-        //     {
-        //         return NotFound();
-        //     }
-
-        //     product.StockQuantity += dto.StockQuantity;
-        //     await productRepository.UpdateAsync(product);
-        //     return NoContent();
-        // }
-
         [HttpPut("{id}/stock")]
         public async Task<IActionResult> UpdateStock(Guid id, UpdateProductStockDto dto)
         {

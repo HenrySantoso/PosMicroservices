@@ -1,14 +1,14 @@
 version: '3.8'
-
 services:
-  mongo:
-    image: mongo
-    container_name: mongo
-    restart: always
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
-      - "27017:27017"
+      - "5672:5672"     # RabbitMQ default port
+      - "15672:15672"   # RabbitMQ management UI
     volumes:
-      - mongo_data:/data/db
+      - rabbitmq_data:/var/lib/rabbitmq
+    hostname: rabbitmq
 
 volumes:
-  mongo_data:
+  rabbitmq_data:

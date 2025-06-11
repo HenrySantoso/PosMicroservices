@@ -57,6 +57,10 @@
               "target": "Package",
               "version": "[9.0.0, )"
             },
+            "Microsoft.Extensions.Http.Polly": {
+              "target": "Package",
+              "version": "[9.0.6, )"
+            },
             "MongoDB.Driver": {
               "target": "Package",
               "version": "[3.2.1, )"
@@ -64,6 +68,14 @@
             "Play.Base.Service": {
               "target": "Package",
               "version": "[1.0.0, )"
+            },
+            "Polly": {
+              "target": "Package",
+              "version": "[8.5.2, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[7.1.2, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

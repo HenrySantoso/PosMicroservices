@@ -11,6 +11,7 @@
     <PackageReference Include="MongoDB.Driver" Version="3.2.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
     <PackageReference Include="Play.Base.Service" Version="1.0.0" />
+    <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
   </ItemGroup>
 
 </Project>

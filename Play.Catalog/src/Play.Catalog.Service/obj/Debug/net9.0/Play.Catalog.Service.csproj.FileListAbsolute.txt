@@ -48,3 +48,4 @@ C:\GitHub\Microservices\PosMicroservices\Play.Catalog\src\Play.Catalog.Service\o
 C:\GitHub\Microservices\PosMicroservices\Play.Catalog\src\Play.Catalog.Service\obj\Debug\net9.0\Play.Catalog.Service.pdb
 C:\GitHub\Microservices\PosMicroservices\Play.Catalog\src\Play.Catalog.Service\obj\Debug\net9.0\Play.Catalog.Service.genruntimeconfig.cache
 C:\GitHub\Microservices\PosMicroservices\Play.Catalog\src\Play.Catalog.Service\obj\Debug\net9.0\ref\Play.Catalog.Service.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Catalog\src\Play.Catalog.Service\bin\Debug\net9.0\RabbitMQ.Client.dll

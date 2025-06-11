@@ -4,6 +4,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using Play.Base.Service.MongoDB;
 using Play.Transaction.Service.Clients;
 using Play.Transaction.Service.Entities;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,13 +22,21 @@ builder.Services.AddMongo().AddMongoRepository<SaleItems>("SaleItems");
 builder.Services.AddMongo().AddMongoRepository<Sales>("Sales");
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddHttpClient<ProductClient>(client =>
-{
-    client.BaseAddress = new Uri("https://localhost:7201");
-});
+builder
+    .Services.AddHttpClient<ProductClient>(client =>
+    {
+        client.BaseAddress = new Uri("http://localhost:5201");
+    })
+    .AddTransientHttpErrorPolicy(policy =>
+        policy.CircuitBreakerAsync(
+            handledEventsAllowedBeforeBreaking: 3,
+            durationOfBreak: TimeSpan.FromSeconds(30)
+        )
+    );
+
 builder.Services.AddHttpClient<CustomerClient>(client =>
 {
-    client.BaseAddress = new Uri("https://localhost:7202");
+    client.BaseAddress = new Uri("http://localhost:5202");
 });
 
 var app = builder.Build();

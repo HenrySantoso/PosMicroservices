@@ -48,3 +48,15 @@ C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.S
 C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\obj\Debug\net9.0\Play.Transaction.Service.pdb
 C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\obj\Debug\net9.0\Play.Transaction.Service.genruntimeconfig.cache
 C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\obj\Debug\net9.0\ref\Play.Transaction.Service.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Polly.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Polly.Core.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\RabbitMQ.Client.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Diagnostics.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Diagnostics.Abstractions.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Http.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Http.Polly.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Logging.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Logging.Abstractions.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Options.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\GitHub\Microservices\PosMicroservices\Play.Transaction\src\Play.Transaction.Service\bin\Debug\net9.0\Polly.Extensions.Http.dll

@@ -1,8 +1,11 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Play.Base.Service.Interfaces;
 using Play.Transaction.Service.Clients;
 using Play.Transaction.Service.Dtos;
 using Play.Transaction.Service.Entities;
+using Polly.CircuitBreaker;
+using RabbitMQ.Client;
 
 namespace Play.Transaction.Service.Controllers
 {
@@ -25,13 +28,6 @@ namespace Play.Transaction.Service.Controllers
             this.productClient = productClient;
         }
 
-        // [HttpGet]
-        // public async Task<IEnumerable<SaleItemsDto>> GetAllAsync()
-        // {
-        //     var saleItems = (await saleItemsRepository.GetAllAsync()).Select(c => c.AsDto());
-        //     return saleItems;
-        // }
-
         [HttpGet]
         public async Task<IEnumerable<SaleItemsProductDto>> GetAllAsync()
         {
@@ -46,17 +42,6 @@ namespace Play.Transaction.Service.Controllers
                 )
             );
         }
-
-        // [HttpGet("{id}")]
-        // public async Task<ActionResult<SaleItemsDto>> GetByIdAsync(Guid id)
-        // {
-        //     var item = await saleItemsRepository.GetByIdAsync(id);
-        //     if (item is null)
-        //     {
-        //         return NotFound();
-        //     }
-        //     return item.AsDto();
-        // }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<SaleItemsProductDto>> GetByIdAsync(Guid id)
@@ -76,28 +61,6 @@ namespace Play.Transaction.Service.Controllers
             return item.AsProductDto(product.ProductName);
         }
 
-        // [HttpPost]
-        // public async Task<ActionResult<SaleItemsDto>> Post(CreateSaleItemsDto createItemDto)
-        // {
-        //     var item = new SaleItems
-        //     {
-        //         Id = Guid.NewGuid(),
-        //         ProductId = createItemDto.ProductId,
-        //         SaleId = createItemDto.SaleId,
-        //         Quantity = createItemDto.Quantity,
-        //         Price = createItemDto.Price
-        //     };
-
-        //     await saleItemsRepository.CreateAsync(item);
-
-        //     // update stock quantity from product service
-
-        //     // 🔄 Update TotalAmount di tabel Sales
-        //     await UpdateTotalAmountAsync(item.SaleId);
-
-        //     return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
-        // }
-
         [HttpPost]
         public async Task<ActionResult<SaleItemsDto>> Post(CreateSaleItemsDto createItemDto)
         {
@@ -114,8 +77,20 @@ namespace Play.Transaction.Service.Controllers
             // Simpan SaleItem di database
             await saleItemsRepository.CreateAsync(item);
 
-            // 2. Ambil data produk dari Product API untuk mendapatkan stok
-            var product = await productClient.GetProductByIdAsync(item.ProductId);
+            // 2. Ambil data produk dari Product API untuk mendapatkan stok dengan circuit breaker
+            ProductDto product;
+            try
+            {
+                product = await productClient.GetProductByIdAsync(item.ProductId);
+            }
+            catch (BrokenCircuitException)
+            {
+                return StatusCode(
+                    503,
+                    "Product service is temporarily unavailable. Please try again later."
+                );
+            }
+
             if (product is null)
             {
                 return NotFound("Product not found.");
@@ -124,31 +99,69 @@ namespace Play.Transaction.Service.Controllers
             // 3. Hitung stok yang baru setelah dikurangi dengan jumlah item yang dijual
             var updatedStockQuantity = product.StockQuantity - item.Quantity;
 
-            // Cek apakah stok cukup
             if (updatedStockQuantity < 0)
             {
                 return BadRequest("Insufficient stock quantity.");
             }
 
             // 4. Update stok produk menggunakan Product API
-            var updateProductStockDto = item.AsUpdateProductStockDto(updatedStockQuantity);
-            var stockUpdateResponse = await productClient.UpdateProductStockAsync(
-                item.ProductId,
-                updateProductStockDto
-            );
+            try
+            {
+                var updateProductStockDto = item.AsUpdateProductStockDto(updatedStockQuantity);
+                var stockUpdateResponse = await productClient.UpdateProductStockAsync(
+                    item.ProductId,
+                    updateProductStockDto
+                );
 
-            if (!stockUpdateResponse.IsSuccessStatusCode)
+                if (!stockUpdateResponse.IsSuccessStatusCode)
+                {
+                    return StatusCode(
+                        (int)stockUpdateResponse.StatusCode,
+                        "Failed to update product stock."
+                    );
+                }
+            }
+            catch (BrokenCircuitException)
             {
                 return StatusCode(
-                    (int)stockUpdateResponse.StatusCode,
-                    "Failed to update product stock."
+                    503,
+                    "Product service is temporarily unavailable. Please try again later."
                 );
             }
 
-            // 5. Update TotalAmount di Sales (opsional, jika perlu)
+            // 5. Update TotalAmount di Sales
             await UpdateTotalAmountAsync(item.SaleId);
 
-            // 6. Kembalikan hasil SaleItem yang baru dibuat
+            // 6. Kirim pesan ke RabbitMQ
+            var factory = new ConnectionFactory
+            {
+                Uri = new Uri("amqp://guest:guest@localhost:5672")
+            };
+
+            using var connection = await factory.CreateConnectionAsync();
+            using var channel = await connection.CreateChannelAsync();
+
+            await channel.QueueDeclareAsync(
+                "saleitems-queue",
+                durable: false,
+                exclusive: false,
+                autoDelete: false,
+                arguments: null
+            );
+
+            string message =
+                $"Nama Produk: {product.ProductName}, Jumlah: {item.Quantity}, Harga: {item.Price}, Total Harga: {item.Price * item.Quantity}";
+            var body = Encoding.UTF8.GetBytes(message);
+
+            await channel.BasicPublishAsync(
+                exchange: string.Empty,
+                routingKey: "saleitems-queue",
+                body: body
+            );
+
+            Console.WriteLine($" [x] Sent: {message}");
+
+            // 7. Kembalikan hasil SaleItem yang baru dibuat
             return CreatedAtAction(nameof(GetByIdAsync), new { id = item.Id }, item.AsDto());
         }
 
@@ -162,7 +175,19 @@ namespace Play.Transaction.Service.Controllers
             }
 
             // Ambil data produk lama
-            var product = await productClient.GetProductByIdAsync(existingItem.ProductId);
+            ProductDto product;
+            try
+            {
+                product = await productClient.GetProductByIdAsync(existingItem.ProductId);
+            }
+            catch (BrokenCircuitException)
+            {
+                return StatusCode(
+                    503,
+                    "Product service is temporarily unavailable. Please try again later."
+                );
+            }
+
             if (product is null)
             {
                 return NotFound("Product not found.");
@@ -187,17 +212,29 @@ namespace Play.Transaction.Service.Controllers
             await saleItemsRepository.UpdateAsync(existingItem);
 
             // Update stok produk di Product API
-            var updateProductStockDto = existingItem.AsUpdateProductStockDto(updatedStockQuantity);
-            var stockUpdateResponse = await productClient.UpdateProductStockAsync(
-                existingItem.ProductId,
-                updateProductStockDto
-            );
+            try
+            {
+                var updateProductStockDto = existingItem.AsUpdateProductStockDto(
+                    updatedStockQuantity
+                );
+                var stockUpdateResponse = await productClient.UpdateProductStockAsync(
+                    existingItem.ProductId,
+                    updateProductStockDto
+                );
 
-            if (!stockUpdateResponse.IsSuccessStatusCode)
+                if (!stockUpdateResponse.IsSuccessStatusCode)
+                {
+                    return StatusCode(
+                        (int)stockUpdateResponse.StatusCode,
+                        "Failed to update product stock."
+                    );
+                }
+            }
+            catch (BrokenCircuitException)
             {
                 return StatusCode(
-                    (int)stockUpdateResponse.StatusCode,
-                    "Failed to update product stock."
+                    503,
+                    "Product service is temporarily unavailable. Please try again later."
                 );
             }
 
