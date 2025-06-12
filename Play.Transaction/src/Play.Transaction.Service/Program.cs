@@ -5,6 +5,7 @@ using Play.Base.Service.MongoDB;
 using Play.Transaction.Service.Clients;
 using Play.Transaction.Service.Entities;
 using Polly;
+using Polly.Extensions.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,22 +23,30 @@ builder.Services.AddMongo().AddMongoRepository<SaleItems>("SaleItems");
 builder.Services.AddMongo().AddMongoRepository<Sales>("Sales");
 builder.Services.AddEndpointsApiExplorer();
 
+var retryPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError()
+    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)));
+
+var circuitBreakerPolicy = HttpPolicyExtensions
+    .HandleTransientHttpError()
+    .CircuitBreakerAsync(3, TimeSpan.FromSeconds(30));
+
+// Wrap retry and circuit breaker
+var policyWrap = Policy.WrapAsync(retryPolicy, circuitBreakerPolicy);
+
 builder
     .Services.AddHttpClient<ProductClient>(client =>
     {
         client.BaseAddress = new Uri("http://localhost:5201");
     })
-    .AddTransientHttpErrorPolicy(policy =>
-        policy.CircuitBreakerAsync(
-            handledEventsAllowedBeforeBreaking: 3,
-            durationOfBreak: TimeSpan.FromSeconds(30)
-        )
-    );
+    .AddPolicyHandler(policyWrap);
 
-builder.Services.AddHttpClient<CustomerClient>(client =>
-{
-    client.BaseAddress = new Uri("http://localhost:5202");
-});
+builder
+    .Services.AddHttpClient<CustomerClient>(client =>
+    {
+        client.BaseAddress = new Uri("http://localhost:5202");
+    })
+    .AddPolicyHandler(policyWrap);
 
 var app = builder.Build();
 

@@ -1,37 +1,49 @@
 using System.Net.Http.Json;
 using Play.Transaction.Service.Dtos;
 using Polly;
-using Polly.Retry;
+using Polly.CircuitBreaker;
 
 namespace Play.Transaction.Service.Clients
 {
     public class ProductClient
     {
         private readonly HttpClient _httpClient;
-        private readonly AsyncRetryPolicy _retryPolicy;
+        private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
 
         public ProductClient(HttpClient httpClient)
         {
             _httpClient = httpClient;
 
-            _retryPolicy = Policy
+            _circuitBreakerPolicy = Policy
                 .Handle<HttpRequestException>()
-                .Or<TaskCanceledException>() // optional: for timeout
-                .WaitAndRetryAsync(
-                    retryCount: 5,
-                    sleepDurationProvider: attempt => TimeSpan.FromSeconds(2),
-                    onRetry: (exception, timespan, retryCount, context) =>
+                .Or<TaskCanceledException>()
+                .AdvancedCircuitBreakerAsync(
+                    failureThreshold: 0.5, // 50% failure rate
+                    samplingDuration: TimeSpan.FromSeconds(10), // waktu pengamatan
+                    minimumThroughput: 5, // minimal 5 request dalam window
+                    durationOfBreak: TimeSpan.FromSeconds(30),
+                    onBreak: (exception, breakDelay, context) =>
                     {
                         Console.WriteLine(
-                            $"[Polly Retry {retryCount}] {exception.GetType().Name}: {exception.Message}"
+                            $"[CircuitBreaker OPEN] Breaking for {breakDelay.TotalSeconds}s due to: {exception.Message}"
                         );
+                    },
+                    onReset: (context) =>
+                    {
+                        Console.WriteLine(
+                            "[CircuitBreaker CLOSED] Circuit closed. Requests allowed again."
+                        );
+                    },
+                    onHalfOpen: () =>
+                    {
+                        Console.WriteLine("[CircuitBreaker HALF-OPEN] Trial request is allowed.");
                     }
                 );
         }
 
         public async Task<IReadOnlyCollection<ProductDto>> GetProductsAsync()
         {
-            return await _retryPolicy.ExecuteAsync(async () =>
+            return await _circuitBreakerPolicy.ExecuteAsync(async () =>
             {
                 var products = await _httpClient.GetFromJsonAsync<IReadOnlyCollection<ProductDto>>(
                     "/api/Products"
@@ -46,7 +58,7 @@ namespace Play.Transaction.Service.Clients
         {
             var query = string.Join(",", productIds);
 
-            return await _retryPolicy.ExecuteAsync(async () =>
+            return await _circuitBreakerPolicy.ExecuteAsync(async () =>
             {
                 var response = await _httpClient.GetAsync($"/api/Products?ids={query}");
                 Console.WriteLine($"GET /api/Products?ids={query} => {response.StatusCode}");
@@ -61,16 +73,26 @@ namespace Play.Transaction.Service.Clients
 
         public async Task<ProductDto?> GetProductByIdAsync(Guid productId)
         {
-            return await _retryPolicy.ExecuteAsync(async () =>
+            try
             {
-                var response = await _httpClient.GetAsync($"/api/Products/{productId}");
-                Console.WriteLine($"GET /api/Products/{productId} => {response.StatusCode}");
+                return await _circuitBreakerPolicy.ExecuteAsync(async () =>
+                {
+                    var response = await _httpClient.GetAsync($"/api/Products/{productId}");
+                    Console.WriteLine(
+                        $"[CB OK] GET /api/Products/{productId} => {response.StatusCode}"
+                    );
 
-                if (response.IsSuccessStatusCode)
-                    return await response.Content.ReadFromJsonAsync<ProductDto>();
+                    if (response.IsSuccessStatusCode)
+                        return await response.Content.ReadFromJsonAsync<ProductDto>();
 
+                    return null;
+                });
+            }
+            catch (BrokenCircuitException)
+            {
+                Console.WriteLine("[CB BLOCKED] Request blocked karena circuit OPEN.");
                 return null;
-            });
+            }
         }
 
         public async Task<HttpResponseMessage> UpdateProductStockAsync(
@@ -78,7 +100,7 @@ namespace Play.Transaction.Service.Clients
             UpdateProductStockDto updateProductStockDto
         )
         {
-            return await _retryPolicy.ExecuteAsync(async () =>
+            return await _circuitBreakerPolicy.ExecuteAsync(async () =>
             {
                 var response = await _httpClient.PutAsJsonAsync(
                     $"/api/Products/{productId}/stock",
